@@ -1,0 +1,13 @@
+HOST_PETH=eth0
+HOST_BRIDGE=xbr
+
+BRIDGES_CONF="
+ovs10|192.168.10.254/24
+ovs11|192.168.11.254/24
+ovs172|172.16.0.254/16
+"
+
+#BIN_BRCTL=/usr/sbin/brctl
+#BIN_OVS_VSCTL=/usr/bin/ovs-vsctl
+
+_DEBUG_=1

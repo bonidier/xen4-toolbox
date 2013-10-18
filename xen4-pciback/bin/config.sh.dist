@@ -1,0 +1,5 @@
+XEN_PCIBACK_HIDE_LIST="
+Intel Corporation 6 Series/C200 Series Chipset Family USB Enhanced Host Controller #2
+Creative Labs SB Audigy
+Radeon HD 6
+"

@@ -1,0 +1,139 @@
+#!/bin/bash
+# modified by Didier BONNEFOi <dbonnefoi@gmail.com>
+# based on http://old-list-archives.xenproject.org/archives/html/xen-users/2011-08/msg00071.html
+#
+
+#============================================================================
+# ${XEN_SCRIPT_DIR}/vif-openvswitch
+#
+# Script for configuring a vif using Open vSwitch.
+#
+# Usage:
+# vif-openvswitch (add|remove|online|offline)
+#
+# Environment vars:
+# vif         vif interface name (required).
+# XENBUS_PATH path to this device's details in the XenStore (required).
+#
+# Read from the store:
+# bridge  bridge to add the vif to (optional).  Defaults to searching for the
+#         bridge itself.
+#
+# up:
+# Enslaves the vif interface to the bridge.
+#
+# down:
+# Removes the vif interface from the bridge.
+#============================================================================
+dir=$(dirname "$0")
+. "$dir/vif-common.sh"
+
+log debug "debug: command:$command vif:$vif"
+bridge=${bridge:-}
+log debug "debug: bridge variable before xenstore: '$bridge'"
+log debug "debug: XENBUS_PATH = $XENBUS_PATH"
+bridge=$(xenstore_read_default "$XENBUS_PATH/bridge" "$bridge")
+log debug "debug: bridge variable from xenstore: '$bridge'"
+
+if [ -z "${bridge}" ]
+then
+  log debug "debug: bridge not found, getting first OVS bridge by default"
+  bridge=$(ovs-vsctl list-br | cut -d " " -f 1)
+
+  if [ -z "${bridge}" ]
+  then
+    fatal "Could not find bridge and none was specified"
+  fi
+  # if many bridge found (= bridge value not returned by xenstore)
+  if [ $(echo $bridge | wc -w) -gt 1 ]
+  then
+    prefix_log=FIX_PV_DOMU
+    log debug "$prefix_log:too many bridges found, fix:"
+
+    #  we determine vif's bridge
+    list_bridge=$(echo $bridge | tr '\n' ' ')
+    for cur_br in $list_bridge
+    do
+      RET=NOT_FOUND
+      ovs-vsctl list-ports $cur_br | grep "^$vif$" 1>/dev/null 2>&1 && RET=FOUND
+      log debug "$prefix_log:check vif $vif in bridge $cur_br:$RET"
+      [ "$RET" == "FOUND" ] && bridge=$cur_br &&  break
+    done
+    [ "$RET" == "NOT_FOUND" ] && fatal "$prefix_log:no bridge found for vif $vif"
+    log debug "$prefix_log:bridge for vif $vif = $bridge"
+    prefix_log=
+  fi
+fi
+
+log debug "debug: bridge found : '$bridge'"
+tag=${tag:-}
+
+log debug "debug: checking bridge with vlan"
+
+# Domain on VLAN tagged bridge?
+RET=0
+ovs-vsctl list-br | grep -c "^${bridge}$" 1>/dev/null 2>&1 || RET=1
+# if no bridge found, we're on a vlan
+if [ $RET -eq 1 ]
+then
+  if [[ $bridge =~ \.[[:digit:]]{1,4}$ ]]
+  then
+    tag=$(echo ${bridge} | cut -d "." -f 2)
+    bridge=$(echo ${bridge} | cut -d "." -f 1)
+	log debug "tag:$tag bridge:$bridge"
+  else
+    fatal "Could not find tagged bridge device '${bridge}'"
+  fi
+else
+  log debug "bridge found : ${bridge}"
+fi
+
+RET=0
+
+# double checking necessary, when passing into vlan case
+ovs-vsctl list-br | grep -c "^${bridge}$" 1>/dev/null 2>&1 || RET=1
+if [ $RET -eq 1 ]
+then
+  fatal "Could not find bridge device ${bridge}"
+fi
+
+if [ -z "${tag}" ]
+then
+  log debug "Successful vif-openvswitch $command for ${vif}, bridge ${bridge}."
+else
+  log debug "Successful vif-openvswitch $command for ${vif}, bridge ${bridge}, tag ${tag}."
+fi
+
+case "$command" in
+  online)
+    ifconfig "${vif}" 0.0.0.0 up
+    log debug "debug ifconfig: $vif up:$? / bridge=$bridge"
+    # FIX : we create interface before OVS
+    brctl addif ${bridge} ${vif}
+    log debug "test:brctl addif ${bridge} ${vif}, ret=$?"
+
+    if [ -z $tag ]
+    then
+      ovs-vsctl -- --may-exist add-port ${bridge} ${vif}
+    else
+      ovs-vsctl -- --may-exist add-port ${bridge} ${vif} tag=${tag}
+    fi
+  ;;
+
+  offline)
+    log debug "debug: OVS del-port + down IF : bridge=$bridge vif=$vif"
+    ovs-vsctl -- --if-exists del-port ${bridge} ${vif}
+    [ $? -ne 0 ] && log debug "debug: bad bridge : $bridge"
+
+    ifconfig "${vif}" 0.0.0.0 down
+    log debug "debug ifconfig: $vif down:$?"
+    ;;
+
+  add)
+    ;;
+esac
+
+if [ "$command" == "online" ]
+then
+  success
+fi

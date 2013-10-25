@@ -1,0 +1,14 @@
+[Unit]
+Description=Xen:Custom VT-D PCIBACK
+Requires=proc-xen.mount xenstored.service
+After=proc-xen.mount xenstored.service xenconsoled.service
+Before=xen-platform.service
+
+[Service]
+ExecStart=/data/xen/pciback/vtd-devices.sh
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,22 @@
+[Unit]
+Description=Xen:Custom Platform
+#After=proc-xen.mount xenstored.service netcfg.service ovs-vswitchd.service ovsdb-server.service xen-VTD.service
+After=proc-xen.mount xenstored.service netctl@bridge-xen.service ovs-vswitchd.service ovsdb-server.service xen-VTD.service
+Requires=proc-xen.mount xenstored.service
+ConditionPathExists=/proc/xen
+
+[Service]
+ExecStartPre=/data/xen-network/ovs-bridged-networks/xen-OVS-bridged-network.sh start
+ExecStart=/data/xen/xl-boot.sh
+
+ExecStop=/data/xen/xl-shutdown-VM.sh
+ExecStopPost=/data/xen-network/ovs-bridged-networks/xen-OVS-bridged-network.sh stop
+
+Type=oneshot
+RemainAfterExit=yes
+#StandardOutput=tty
+TimeoutSec=0
+
+[Install]
+WantedBy=multi-user.target
+

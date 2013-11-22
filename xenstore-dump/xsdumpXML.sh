@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
+cd $(dirname $0)
 . ./xenstore-dumpkey.sh
-# you can get kv2xml from my repo https://github.com/bonidier/bodi-bashlib
-. ../../bodi-bashlib/lib/kv2xml/kv2xml.lib.sh
+. ./config.sh
 
-_KV2XML_SEP_PATH="/"
-_KV2XML_SEP_KV="="
+[ -z "$KV2XML_PATH" -o ! -d "$KV2XML_PATH" ] && echo "KV2XML_PATH empty or bad directory" && exit 1
+
+. ${KV2XML_PATH}/kv2xml.lib.sh
 
 echo "<dump-xenstore>"
 for key in $(xenstore-list / | egrep -v 'tool|libxl'); 

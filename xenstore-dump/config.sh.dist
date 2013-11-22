@@ -1,0 +1,8 @@
+# you can get kv2xml from my repo https://github.com/bonidier/bodi-bashlib
+KV2XML_PATH=path-to/bodi-bashlib/lib/kv2xml/kv2xml.lib.sh
+# separator between key tree
+_KV2XML_SEP_PATH="/"
+# separator between key and value
+_KV2XML_SEP_KV="="
+
+

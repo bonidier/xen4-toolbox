@@ -1,4 +1,5 @@
 #!/bin/bash
+cd $(dirname $0)
 . ./config.sh
 
 for cfg in $XEN_DOMU_START

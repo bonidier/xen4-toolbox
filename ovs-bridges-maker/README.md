@@ -9,7 +9,7 @@ when stopping, if a VM is running on a bridge, this last will not be destroyed
 packages : 
 - openvswitch
 - dhcpd, pre-configured to listen on bridges that this script manage
-
+- ipcalc (used for broadcast calculation in inc/base-network.lib.sh)
 
 # misc/xen/vif-openvswitch
 

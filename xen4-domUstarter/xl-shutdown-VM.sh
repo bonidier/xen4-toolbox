@@ -1,6 +1,8 @@
 #!/bin/bash
 
+cd $(dirname $0)
 [ -f config.sh ] && . ./config.sh
+
 [ "$BIN_XL" == "" ] && BIN_XL=/usr/sbin/xl
 
 # we remove headers and get third column, with domU's name

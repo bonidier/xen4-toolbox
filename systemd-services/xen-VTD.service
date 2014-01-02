@@ -6,7 +6,7 @@ After=proc-xen.mount xenstored.service
 Before=xen-platform.service
 
 [Service]
-ExecStart=/data/xen4-toolbox/xen4-pciback/vtd-devices.sh
+ExecStart=/data/xen4-toolbox/xen4-pciback/bin/vtd-devices.sh
 Type=oneshot
 RemainAfterExit=yes
 

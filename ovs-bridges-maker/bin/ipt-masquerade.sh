@@ -20,7 +20,7 @@ do
  echo "$IPT -A OUTPUT -o $mybr -j ACCEPT"
 done
 # to pass through host's gateway, we replace source IP from each bridge  to host machine's IP
-echo "$IPT -t nat -A POSTROUTING -o $brname -j MASQUERADE"
+echo "$IPT -t nat -A POSTROUTING -o $HOST_BRIDGE -j MASQUERADE"
 
 #iptables -t nat -A POSTROUTING -o xbr -s 192.168.10.0/24  -j MASQUERADE
 #iptables -t nat -A POSTROUTING -o xbr -s 192.168.11.0/24  -j MASQUERADE

@@ -1,6 +1,10 @@
+# weight for Domain-0, better than default (256)
 XEN_DOM0_WEIGHT=512
+# where you store your Xen'VM startup  file
 XEN_DOMU_CONFIG=/etc/xen/vm
-XEN_DOMU_START="xen-dns1PV xen-dns2PV"
+# VM to start on boot
+XEN_DOMU_START="your-VM1 your-VM2"
+# path to your xl file
 BIN_XL=/usr/sbin/xl
 
 

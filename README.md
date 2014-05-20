@@ -18,11 +18,12 @@ also include 'vif-openvswitch' script to bind your domU to OVS
 ### systemd-services
 
 sample Systemd service to start my Xen platform, based on script in this other directories
+should be placed in /etc/systemd/system
 
 ### xen4-launcher
 
   - xl-boot.sh define weight for Domain-0, and boot user defined DomU (VM)
-  - xl-shutdown-VM.sh : should shutdown all runing DomU
+  - xl-shutdown-VM.sh : should shutdown all running DomU
 
 ### xen4-pciback
 

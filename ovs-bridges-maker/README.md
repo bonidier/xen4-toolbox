@@ -16,13 +16,14 @@ packages :
 script used by Xen to bind domU to OVS
 
 - you should copy this script into /etc/xen/scripts/
+  (note : vif-openvswitch script as been added in recent Xen release, copy this vif-openvswitch as vif-openvswitch-custom)
 
 - alter /etc/xen/xl.conf to change default vif script
- 
+
 ~~~
     #default vif script 
     #vifscript="vif-bridge"
-    vifscript="/etc/xen/scripts/vif-openvswitch"
+    vifscript="/etc/xen/scripts/vif-openvswitch-custom"
 ~~~
 
 

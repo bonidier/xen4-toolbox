@@ -9,6 +9,6 @@
 
   service to start/stop internal bridges and domU
 
-  (using "ovs-bridges-maker" and "xen4-domUstarter" from top level)
+  (using "ovs-bridges-maker" and "xen4-launcher" from top level)
 
 

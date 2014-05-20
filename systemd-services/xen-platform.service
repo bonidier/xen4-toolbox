@@ -7,9 +7,9 @@ ConditionPathExists=/proc/xen
 
 [Service]
 ExecStartPre=/data/xen4-toolbox/ovs-bridges-maker/bin/ovs-bridges-maker.sh start
-ExecStart=/data/xen4-toolbox/xen4-domUstarter/xl-boot.sh
+ExecStart=/data/xen4-toolbox/xen4-launcher/xl-boot.sh
 
-ExecStop=/data/xen4-toolbox/xen4-domUstarter/xl-shutdown-VM.sh
+ExecStop=/data/xen4-toolbox/xen4-launcher/xl-shutdown-VM.sh
 ExecStopPost=/data/xen4-toolbox/ovs-bridges-maker/bin/ovs-bridges-maker.sh stop
 
 Type=oneshot

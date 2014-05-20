@@ -1,2 +1,3 @@
-/*/*/config.sh
-/*/config.sh
+/ovs-bridges-maker/etc/config.sh
+/xenstore-dump/config.sh
+/xen4-launcher/config.sh

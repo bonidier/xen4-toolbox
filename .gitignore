@@ -1,3 +1,4 @@
 /ovs-bridges-maker/etc/config.sh
 /xenstore-dump/config.sh
 /xen4-launcher/config.sh
+/xen4-pciback/bin/config.sh

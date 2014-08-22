@@ -9,8 +9,9 @@ for d in $XEN_PCIBACK_HIDE_LIST
 do
   #get BDF id
   BDF=$(./BDFlspci.sh "$d")
-  echo "[device label : $d ]"
-  echo "[device BDF(s) : $BDF]"
+  echo "[device label : '$d' / BDF(s) : '$BDF' ]"
+  [ -z "$BDF" ] && continue 
+
   #unbind BDF from dom0, forward to xen pciback
   ./pciback.sh $BDF
 done

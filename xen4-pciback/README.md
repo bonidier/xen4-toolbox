@@ -12,6 +12,7 @@ your Motherboard+CPU need VT-d/IOMMU support
   * bin/config.sh.dist : configuration file example for vtd-devices.sh
   * bin/BDFlspci.sh string : get BDF (Bus:Device:Function) id from pci-device string
   * bin/pciback.sh BDF : unbind a BDF set as first argument
+  * bin/xlpci2name.sh : show xen PCI assignable BDF's devices names
   * ../systemd-services/xen-VTD.service : startup systemd script example to hide devices on boot
 
 
